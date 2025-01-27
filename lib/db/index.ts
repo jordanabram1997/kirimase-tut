@@ -1,6 +1,7 @@
 import { neon, neonConfig, NeonQueryFunction } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { env } from "@/lib/env.mjs";
+import { Pool } from 'pg';
 
 neonConfig.fetchConnectionCache = true;
  

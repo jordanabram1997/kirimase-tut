@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useEffect } from "react";
+import { useFormStatus } from "react-dom";
 
 import { AccountCard, AccountCardFooter, AccountCardBody } from "./AccountCard";
 import { updateUser } from "@/lib/actions/users";
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function UpdateNameCard({ name }: { name: string }) {
-  const [state, formAction] = useFormState(updateUser, {
+  const [state, formAction] = useActionState(updateUser, {
     error: "",
   });
 

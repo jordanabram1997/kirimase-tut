@@ -42,7 +42,7 @@ export const validateRequest = cache(
   async (): Promise<
     { user: User; session: Session } | { user: null; session: null }
   > => {
-    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null
+    const sessionId = (await cookies()).get(lucia.sessionCookieName)?.value ?? null
     if (!sessionId) {
       return {
         user: null,
@@ -53,9 +53,10 @@ export const validateRequest = cache(
     const result = await lucia.validateSession(sessionId)
     // next.js throws when you attempt to set cookie when rendering page
     try {
+      const cookieStore = await cookies();
       if (result.session && result.session.fresh) {
         const sessionCookie = lucia.createSessionCookie(result.session.id)
-        cookies().set(
+        cookieStore.set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes
@@ -63,7 +64,7 @@ export const validateRequest = cache(
       }
       if (!result.session) {
         const sessionCookie = lucia.createBlankSessionCookie()
-        cookies().set(
+        cookieStore.set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes
@@ -73,3 +74,17 @@ export const validateRequest = cache(
     return result
   }
 )
+
+export const checkAuth = async () => {
+  // Await the cookies before using its value
+  const sessionId = (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
+
+  if (!sessionId) {
+    return {
+      user: null,
+      session: null,
+    };
+  }
+
+  // ... rest of your logic
+};
